@@ -7,15 +7,15 @@ contract myContract
     address public owner;
 
     // Constructor function to set the owner of the contract
-    constructor() 
+    constructor() payable
     {
         // Set the owner of the contract to the deployer address
         owner = msg.sender;
     }
 
     // Events for receiving and sending funds 
-    event received (address indexed from, uint amount);
-    event sent(address indexed to, uint amount);
+    event Received (address indexed from, uint amount);
+    event Sent(address indexed to, uint amount);
 
     // Authorized addresses that can send funds to any recipient
     address[] private authorizedAddresses;
@@ -86,6 +86,23 @@ contract myContract
     // For debugging and checking if addresses are added and removed properly
     function getAuthorizedAddresses() public view returns (address[] memory) {
         return authorizedAddresses;
+    }
+
+    // Recieve funds and emit an event
+    receive() external payable 
+    {
+        emit Received(msg.sender, msg.value);
+    }
+
+    fallback() external payable 
+    { 
+        emit Received(msg.sender, msg.value);
+    }
+
+    // Debugging function checkFunds to check if funds are going in and out properly
+    function checkFunds() public view returns (uint)
+    {
+        return address(this).balance;
     }
 
 }
