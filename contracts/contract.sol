@@ -105,4 +105,13 @@ contract myContract
         return address(this).balance;
     }
 
+
+    // Simple send without singing to test on testnet using MetaMask wallet
+    function sendFunds(address payable _to, uint _amount) public onlyAuthorized
+    {
+        require(address(this).balance >= _amount);
+        _to.transfer(_amount);
+        emit Sent(_to, _amount);
+    }
+
 }
